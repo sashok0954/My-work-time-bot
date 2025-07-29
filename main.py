@@ -7,8 +7,7 @@ import threading
 import time
 
 # === Налаштування ===
-TOKEN = '8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw
-'
+TOKEN = '8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw'
 USER_ID = 333545967  # заміни на свій Telegram ID
 
 bot = telebot.TeleBot(TOKEN)
