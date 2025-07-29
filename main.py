@@ -6,8 +6,8 @@ import time as time_module
 import os
 
 # ---🔐 ВСТАВ СВІЙ ТОКЕН ОТУТ ---
-BOT_TOKEN = os.getenv("8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw
-")  # або напряму: 'тут_твій_токен'
+BOT_TOKEN = os.getenv('8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw
+')  # або напряму: 'тут_твій_токен'
 bot = telebot.TeleBot(BOT_TOKEN)
 
 # ---📦 БД SQLite
