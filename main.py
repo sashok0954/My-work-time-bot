@@ -3,15 +3,12 @@ from datetime import datetime, time as dtime, timedelta
 import sqlite3
 import threading
 import time as time_module
-import os
 
-# ---🔐 ВСТАВ СВІЙ ТОКЕН ОТУТ ---
-BOT_TOKEN = os.getenv('8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw
-')  # або напряму: '8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw
-'
+# ---🔐 Твій токен (НЕ передавай його іншим)
+BOT_TOKEN = "8366827952:AAFmKlK25NXnrQZCveTi0P-s4F0hiJTBHDw"
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# ---📦 БД SQLite
+# ---📦 База даних
 conn = sqlite3.connect('work_data.db', check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute('''
@@ -52,7 +49,7 @@ def start(message):
         parse_mode="Markdown"
     )
 
-# ---📊 /total — загальна статистика
+# ---📊 /total — всі записи
 @bot.message_handler(commands=['total'])
 def total(message):
     user_id = message.from_user.id
@@ -71,7 +68,7 @@ def total(message):
 
     bot.reply_to(message, f"📈 Всі записи:\n🔹 Переробітка: {round(total_overtime, 2)} год\n🔹 ПХД: {round(total_phd, 2)} год")
 
-# ---📅 /month — статистика за попередній місяць
+# ---📅 /month — статистика за минулий місяць
 @bot.message_handler(commands=['month'])
 def month(message):
     user_id = message.from_user.id
@@ -97,7 +94,7 @@ def month(message):
 
     bot.reply_to(message, f"📆 За {first_day_last_month.strftime('%B %Y')}:\n🔹 Переробітка: {round(total_overtime, 2)} год\n🔹 ПХД: {round(total_phd, 2)} год")
 
-# ---🗒 /history — вивести історію по днях
+# ---🗒 /history — історія
 @bot.message_handler(commands=['history'])
 def history(message):
     user_id = message.from_user.id
@@ -109,12 +106,12 @@ def history(message):
         return
 
     msg = "📜 Історія записів:\n"
-    for date_str, end_time, phd in records[:30]:  # останні 30
+    for date_str, end_time, phd in records[:30]:
         msg += f"• {date_str} — ⏰ {end_time}, 🛠 ПХД: {phd} год\n"
 
     bot.reply_to(message, msg)
 
-# ---❌ /reset — видалити всі записи
+# ---❌ /reset — очистити все
 @bot.message_handler(commands=['reset'])
 def reset(message):
     user_id = message.from_user.id
@@ -122,7 +119,7 @@ def reset(message):
     conn.commit()
     bot.reply_to(message, "🗑 Усі твої записи видалено.")
 
-# ---🧠 Обробка щоденних записів: "20:30 2"
+# ---🧠 Обробка "20:30 2"
 @bot.message_handler(func=lambda m: True)
 def handle_time_input(message):
     user_id = message.from_user.id
@@ -156,10 +153,9 @@ def handle_time_input(message):
 
     bot.reply_to(message, "✅ Запис збережено!")
 
-# ---⏰ Нагадування о 22:00
+# ---⏰ Щоденне нагадування о 22:00
 def reminder_loop():
     sent_today = set()
-
     while True:
         now = datetime.now()
         if now.hour == 22 and now.minute == 0:
@@ -176,6 +172,6 @@ def reminder_loop():
         else:
             time_module.sleep(30)
 
-# ---🔁 Запуск
+# ---🟢 Запуск
 threading.Thread(target=reminder_loop, daemon=True).start()
 bot.polling(none_stop=True)
